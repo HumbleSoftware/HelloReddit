@@ -1,0 +1,11 @@
+MIDlet-Jar-Size: 0
+MIDlet-1: HelloReddit,/res/icon.png,reddit
+MIDlet-Jar-URL: HelloReddit.jar
+MIDlet-Icon: /res/icon.png
+RIM-COD-URL: HelloReddit.cod
+MicroEdition-Configuration: CLDC-1.1
+MIDlet-Version: @VERSION@
+MIDlet-Name: HelloReddit
+MIDlet-Vendor: HSD
+MicroEdition-Profile: MIDP-2.0
+RIM-MIDlet-Flags-1: 0

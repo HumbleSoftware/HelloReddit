@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<loader version="1.0">
+  <application id="HelloReddit">
+    <name>HelloReddit</name>
+    <version>@VERSION@</version>
+    <vendor>HSD</vendor>
+    <fileset Java="1.2">
+      <files>HelloReddit.cod</files>
+    </fileset>
+  </application>
+</loader>

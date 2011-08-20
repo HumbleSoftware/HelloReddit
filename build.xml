@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Wine" default="build">
+
+  <property file="build.properties"/>
+  <property name="rim-api-jar" value="${RIM-home}/lib/net_rim_api.jar"/>
+  <property name="rim-rapc-jar" value="${RIM-home}/bin/rapc.jar"/>
+  <property name="wtk-preverify" value="${WTK-home}/bin/preverify1.1"/>
+
+  <target name="init">
+    <tstamp/>
+    <fail message="Please set 'RIM-home' in build.properties">
+      <condition>
+        <not>
+          <available file="${RIM-home}" type="dir"/>
+        </not>
+      </condition>
+    </fail>
+    <fail message="Please set 'WTK-home' in build.properties">
+      <condition>
+        <not>
+          <available file="${WTK-home}" type="dir"/>
+        </not>
+      </condition>
+    </fail>
+    <fail message="Please set 'JSON-ME' in build.properties">
+      <condition>
+        <not>
+          <available file="${JSON-ME}" type="file"/>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="build" depends="init">
+  
+    <mkdir dir="build"/>
+    <javac srcdir="src"
+           destdir="build"
+           source="1.2"
+           target="1.2"
+           bootclasspath="${rim-api-jar}"
+           optimize="true"
+           debug="true"
+           deprecation="true"
+           fork="true">
+      <classpath>
+        <pathelement location="${JSON-ME}"/>
+      </classpath>
+    </javac>
+    
+    <unzip src="${JSON-ME}" dest="build"/>
+        
+    <mkdir dir="build-j2me"/>
+    <exec executable="${wtk-preverify}" failonerror="true">
+      <arg line="-classpath '${rim-api-jar}' -d build-j2me build"/>
+    </exec>
+
+    <copy todir="build-j2me">
+      <fileset dir=".">
+        <include name="res/**"/>
+      </fileset>
+    </copy>
+
+    <copy file="HelloReddit.jad.template" tofile="HelloReddit.jad" overwrite="true">
+      <filterset>
+        <filter token="VERSION" value="${version}"/>
+      </filterset>
+    </copy>
+    <copy file="HelloReddit.alx.template" tofile="HelloReddit.alx" overwrite="true">
+      <filterset>
+        <filter token="VERSION" value="${version}"/>
+      </filterset>
+    </copy>
+
+    <jar jarfile="temp.jar" basedir="build-j2me"/>
+    <java jar="${rim-rapc-jar}" fork="true">
+      <arg value="import=${rim-api-jar}"/>
+      <arg value="jad=HelloReddit.jad"/>
+      <arg value="codename=HelloReddit"/>
+      <arg value="temp.jar"/>
+    </java>
+
+    <echo>Remember to sign the .cod file!</echo>
+
+  </target>
+
+  <target name="clean">
+    <delete dir="bin"/>
+    <delete dir="build"/>
+    <delete dir="build-j2me"/>    
+    <delete file="temp.jar"/>
+    <delete file="HelloReddit.cod"/>
+    <delete file="HelloReddit.csl"/>
+    <delete file="HelloReddit.cso"/>
+    <delete file="HelloReddit.debug"/>
+    <delete file="HelloReddit.jad"/>        
+    <delete file="HelloReddit.jar"/>
+    <delete file="LogFile.txt"/>        
+  </target>
+
+</project>
